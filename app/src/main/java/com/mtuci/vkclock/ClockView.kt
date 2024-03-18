@@ -12,6 +12,8 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import java.util.Calendar
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -39,10 +41,16 @@ class ClockView @JvmOverloads constructor(
             hourPaint.color = value
         }
 
-    var minuteHandPointColor = 0xFFE30611.toInt()
+    var minuteHandPointColor = 0xFF000000.toInt()
         set(value) {
             field = value
             minutePaint.color = value
+        }
+
+    var secondHandPointColor = 0xFFE30611.toInt()
+        set(value) {
+            field = value
+            secondPaint.color = value
         }
 
     var circlePointColor = 0xFFC4C4C4.toInt()
@@ -80,6 +88,11 @@ class ClockView @JvmOverloads constructor(
             field = value
             minutePaint.strokeWidth = value
         }
+    private var secondHandWidth = 2F.toPx()
+        set(value) {
+            field = value
+            secondPaint.strokeWidth = value
+        }
 
     private var circleWidth = 2F.toPx()
         set(value) {
@@ -95,11 +108,13 @@ class ClockView @JvmOverloads constructor(
 
     private var hourHandHeight = 20F.toPx()
 
-    private var minuteHandHeight = 40F.toPx()
+    private var minuteHandHeight = 30F.toPx()
+
+    private var secondHandHeight = 40F.toPx()
 
     private var circleRadius = minuteHandHeight + 20F.toPx()
 
-    private var lineHeight = 20F.toPx()
+    private var lineHeight = 10F.toPx()
 
     private val centerPaint = Paint().apply {
         color = centerPointColor
@@ -125,6 +140,14 @@ class ClockView @JvmOverloads constructor(
         strokeCap = Paint.Cap.ROUND
     }
 
+    private val secondPaint = Paint().apply {
+        color = secondHandPointColor
+        strokeWidth = secondHandWidth
+        isAntiAlias = true
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+
     private val circlePaint = Paint().apply {
         color = circlePointColor
         strokeWidth = circleWidth
@@ -143,10 +166,8 @@ class ClockView @JvmOverloads constructor(
 
     private val numbersPaint = Paint().apply {
         color = numbersColor
-//        strokeWidth = lineWidth
         isAntiAlias = true
-//        style = Paint.Style.STROKE
-//        strokeCap = Paint.Cap.ROUND
+        strokeCap = Paint.Cap.ROUND
         textSize = 60F
         textAlign = Paint.Align.CENTER
     }
@@ -154,6 +175,7 @@ class ClockView @JvmOverloads constructor(
     private val centerPoint = PointF()
     private val hourHandPoint = PointF()
     private val minuteHandPoint = PointF()
+    private val secondHandPoint = PointF()
 
     private var registered: Boolean = false
     private val time: Calendar = Calendar.getInstance()
@@ -171,12 +193,14 @@ class ClockView @JvmOverloads constructor(
                 centerPointColor = it.getColor(R.styleable.ClockView_centerPointColor, centerPointColor)
                 hourHandPointColor = it.getColor(R.styleable.ClockView_hourHandPointColor, hourHandPointColor)
                 minuteHandPointColor = it.getColor(R.styleable.ClockView_minuteHandPointColor, minuteHandPointColor)
+                secondHandPointColor = it.getColor(R.styleable.ClockView_secondHandPointColor, secondHandPointColor)
                 circlePointColor = it.getColor(R.styleable.ClockView_circlePointColor, circlePointColor)
                 linePointColor = it.getColor(R.styleable.ClockView_linePointColor, linePointColor)
                 numbersColor = it.getColor(R.styleable.ClockView_numbersColor, numbersColor)
                 centerPointRadius = it.getDimension(R.styleable.ClockView_centerPointRadius, 0f)
                 hourHandWidth = it.getDimension(R.styleable.ClockView_hourHandWidth, 0f)
-                minuteHandWidth = it.getDimension(R.styleable.ClockView_hourHandWidth, 0f)
+                minuteHandWidth = it.getDimension(R.styleable.ClockView_minuteHandWidth, 0f)
+                secondHandWidth = it.getDimension(R.styleable.ClockView_secondHandWidth, 0f)
                 circleWidth = it.getDimension(R.styleable.ClockView_circleWidth, 0f)
                 lineWidth = it.getDimension(R.styleable.ClockView_lineWidth, 0f)
             }
@@ -206,6 +230,13 @@ class ClockView @JvmOverloads constructor(
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
 
         context.registerReceiver(receiver, filter)
+
+        val timer = Timer()
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                onTimeChanged()
+            }
+        }, 0, 1000)
     }
 
     private fun unregisterReceiver() {
@@ -227,7 +258,8 @@ class ClockView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         hourHandHeight = w / 4F - hourHandWidth
-        minuteHandHeight = w / 2F - minuteHandWidth - 30F.toPx()
+        minuteHandHeight = w / 3F - minuteHandWidth
+        secondHandHeight = w / 2.5F - secondHandWidth
         circleRadius = w / 2F - circleWidth
     }
 
@@ -243,16 +275,17 @@ class ClockView @JvmOverloads constructor(
         }
         repeat(60){ i ->
             val pointStart = getPointByAngle(MINUTE_ANGLE * i, circleRadius)
-            val pointEnd = getPointByAngle(MINUTE_ANGLE * i, circleRadius - 10F.toPx())
+            val pointEnd = getPointByAngle(MINUTE_ANGLE * i, circleRadius - lineHeight / 2)
             canvas.drawLine(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y, linePaint)
         }
         repeat(12){ i ->
             val textBounds = Rect()
             numbersPaint.getTextBounds(numbers[i], 0, numbers[i].length, textBounds)
             val textHeight = textBounds.height()
-            val point = getPointByAngle(HOUR_ANGLE * i, circleRadius - lineHeight * 2)
+            val point = getPointByAngle(HOUR_ANGLE * i, (circleRadius - lineHeight * 2.5).toFloat())
             canvas.drawText(numbers[i] ,point.x, point.y + (textHeight / 2f), numbersPaint)
         }
+        canvas.drawLine(centerPoint.x, centerPoint.y, secondHandPoint.x, secondHandPoint.y, secondPaint)
         canvas.drawLine(centerPoint.x, centerPoint.y, minuteHandPoint.x, minuteHandPoint.y, minutePaint)
         canvas.drawLine(centerPoint.x, centerPoint.y, hourHandPoint.x, hourHandPoint.y, hourPaint)
         canvas.drawPoint(centerPoint.x, centerPoint.y, centerPaint)
@@ -260,12 +293,14 @@ class ClockView @JvmOverloads constructor(
     }
 
     private fun calculateSizes() {
+        val second = time.get(Calendar.SECOND)
         val minute = time.get(Calendar.MINUTE)
         val hour = time.get(Calendar.HOUR_OF_DAY) + minute * HOUR_COEFFICIENT
 
         centerPoint.set(width / 2F, height / 2F)
         hourHandPoint.set(getPointByAngle(hour * HOUR_ANGLE, hourHandHeight))
         minuteHandPoint.set(getPointByAngle(minute * MINUTE_ANGLE, minuteHandHeight))
+        secondHandPoint.set(getPointByAngle(second * SECOND_ANGLE, secondHandHeight))
     }
 
     private fun getPointByAngle(angle: Double, radius: Float): PointF {
@@ -280,6 +315,6 @@ class ClockView @JvmOverloads constructor(
         private const val HOUR_COEFFICIENT = 1 / 60F
         private const val HOUR_ANGLE = 360 / 12.0
         private const val MINUTE_ANGLE = 360 / 60.0
-        private const val MATCH_PARENT = -1F
+        private const val SECOND_ANGLE = 360 / 60.0
     }
 }

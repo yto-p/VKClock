@@ -5,12 +5,14 @@
         <attr name="centerPointColor" format="color"/>
         <attr name="hourHandPointColor" format="color"/>
         <attr name="minuteHandPointColor" format="color"/>
+        <attr name="secondHandPointColor" format="color"/>
         <attr name="circlePointColor" format="color"/>
         <attr name="linePointColor" format="color"/>
         <attr name="numbersColor" format="color"/>
         <attr name="centerPointRadius" format="dimension"/>
         <attr name="hourHandWidth" format="dimension"/>
         <attr name="minuteHandWidth" format="dimension"/>
+        <attr name="secondHandWidth" format="dimension"/>
         <attr name="circleWidth" format="dimension"/>
         <attr name="lineWidth" format="dimension"/>
     </declare-styleable>
