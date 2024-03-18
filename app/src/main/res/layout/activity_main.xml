@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <com.mtuci.vkclock.ClockView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:centerPointRadius="6dp"
+        app:hourHandWidth="3dp"
+        app:minuteHandWidth="3dp"
+        app:numbersColor="@color/black"
+        app:circleWidth="3dp"
+        app:linePointColor="#C4C4C4"
+        app:minuteHandPointColor="#E30611"
+        app:centerPointColor="@color/black"
+        app:circlePointColor="@color/black"
+        app:lineWidth="2dp"/>
+</LinearLayout>
