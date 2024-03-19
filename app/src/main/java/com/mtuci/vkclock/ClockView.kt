@@ -29,7 +29,7 @@ class ClockView @JvmOverloads constructor(
 
     val numbers = listOf("XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI")
 
-    var centerPointColor = 0xFFC4C4C4.toInt()
+    var centerPointColor = 0xFFE30611.toInt()
         set(value) {
             field = value
             centerPaint.color = value
@@ -53,13 +53,13 @@ class ClockView @JvmOverloads constructor(
             secondPaint.color = value
         }
 
-    var circlePointColor = 0xFFC4C4C4.toInt()
+    var circlePointColor = 0xFF000000.toInt()
         set(value) {
             field = value
             circlePaint.color = value
         }
 
-    var linePointColor = 0xFFC4C4C4.toInt()
+    var linePointColor = 0xFF000000.toInt()
         set(value) {
             field = value
             linePaint.color = value
@@ -285,9 +285,9 @@ class ClockView @JvmOverloads constructor(
             val point = getPointByAngle(HOUR_ANGLE * i, (circleRadius - lineHeight * 2.5).toFloat())
             canvas.drawText(numbers[i] ,point.x, point.y + (textHeight / 2f), numbersPaint)
         }
-        canvas.drawLine(centerPoint.x, centerPoint.y, secondHandPoint.x, secondHandPoint.y, secondPaint)
-        canvas.drawLine(centerPoint.x, centerPoint.y, minuteHandPoint.x, minuteHandPoint.y, minutePaint)
         canvas.drawLine(centerPoint.x, centerPoint.y, hourHandPoint.x, hourHandPoint.y, hourPaint)
+        canvas.drawLine(centerPoint.x, centerPoint.y, minuteHandPoint.x, minuteHandPoint.y, minutePaint)
+        canvas.drawLine(centerPoint.x, centerPoint.y, secondHandPoint.x, secondHandPoint.y, secondPaint)
         canvas.drawPoint(centerPoint.x, centerPoint.y, centerPaint)
         canvas.drawCircle(centerPoint.x, centerPoint.y, circleRadius, circlePaint)
     }

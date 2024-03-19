@@ -11,17 +11,17 @@
     <com.mtuci.vkclock.ClockView
         android:layout_width="250dp"
         android:layout_height="250dp"
-        app:centerPointRadius="6dp"
+        app:centerPointRadius="7dp"
         app:hourHandWidth="3dp"
         app:minuteHandWidth="3dp"
         app:secondHandWidth="2dp"
+        app:circleWidth="4dp"
+        app:lineWidth="2dp"
         app:numbersColor="@color/black"
-        app:circleWidth="3dp"
         app:linePointColor="@color/black"
         app:hourHandPointColor="@color/black"
         app:minuteHandPointColor="@color/black"
-        app:secondHandPointColor="@color/red"
-        app:centerPointColor="@color/black"
-        app:circlePointColor="@color/black"
-        app:lineWidth="2dp"/>
+        app:secondHandPointColor="@color/blue"
+        app:centerPointColor="@color/blue"
+        app:circlePointColor="@color/black" />
 </LinearLayout>
