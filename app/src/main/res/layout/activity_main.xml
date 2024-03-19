@@ -17,6 +17,7 @@
         app:secondHandWidth="2dp"
         app:circleWidth="4dp"
         app:lineWidth="2dp"
+        app:numbersSize="20sp"
         app:numbersColor="@color/black"
         app:linePointColor="@color/black"
         app:hourHandPointColor="@color/black"

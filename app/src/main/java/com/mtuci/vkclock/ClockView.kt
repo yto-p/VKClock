@@ -106,6 +106,12 @@ class ClockView @JvmOverloads constructor(
             linePaint.strokeWidth = value
         }
 
+    private var numbersSize = 20F.toPx()
+        set(value) {
+            field = value
+            numbersPaint.textSize = value
+        }
+
     private var hourHandHeight = 20F.toPx()
 
     private var minuteHandHeight = 30F.toPx()
@@ -168,7 +174,7 @@ class ClockView @JvmOverloads constructor(
         color = numbersColor
         isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
-        textSize = 60F
+        textSize = numbersSize
         textAlign = Paint.Align.CENTER
     }
 
@@ -203,6 +209,7 @@ class ClockView @JvmOverloads constructor(
                 secondHandWidth = it.getDimension(R.styleable.ClockView_secondHandWidth, 0f)
                 circleWidth = it.getDimension(R.styleable.ClockView_circleWidth, 0f)
                 lineWidth = it.getDimension(R.styleable.ClockView_lineWidth, 0f)
+                numbersSize = it.getDimension(R.styleable.ClockView_numbersSize, 0f)
             }
     }
 

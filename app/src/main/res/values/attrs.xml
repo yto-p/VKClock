@@ -14,5 +14,6 @@
         <attr name="secondHandWidth" format="dimension"/>
         <attr name="circleWidth" format="dimension"/>
         <attr name="lineWidth" format="dimension"/>
+        <attr name="numbersSize" format="dimension"/>
     </declare-styleable>
 </resources>
